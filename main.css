@@ -32,7 +32,7 @@ pre.failure {
   color: red;
 }
 
-#tabs {
+#tabs ul {
   display: flex;
 }
 

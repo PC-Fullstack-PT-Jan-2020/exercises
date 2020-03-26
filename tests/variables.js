@@ -1,5 +1,6 @@
 (function () {
   let num = 1
+  num++
   it('should increment num', () => {
     expect(num).toBe(2)
   });

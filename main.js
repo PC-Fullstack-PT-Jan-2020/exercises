@@ -47,8 +47,9 @@ function expectLogger(cns = true, target, expectation) {
     }
   } else {
     const pre = document.createElement('pre')
-    pre.classList = target === expectation ? 'test success' : 'test failure'
-    pre.innerHTML = `Expected ${target} to be ${expectation}`
+    const passed = target === expectation;
+    pre.classList = passed ? 'test success' : 'test failure'
+    pre.innerHTML = `${passed ? 'PASSED': 'FAILED'}: Expected ${target} to be ${expectation}`
     APP.testRoot.appendChild(pre)
   }
 }
@@ -61,7 +62,6 @@ function addScript(src) {
 
 function removeScripts(filename) {
   var tags = document.getElementsByTagName('script');
-  console.log(tags)
   for (var i = tags.length; i >= 0; i--) { //search backwards within nodelist for matching elements to remove
     if (tags[i] && tags[i].parentNode) {
       tags[i].parentNode.removeChild(tags[i]);

@@ -69,7 +69,7 @@ const APP = {
   clearTests: function () {
     this.testRoot.innerHTML = '';
   },
-  config: config,
+  config: {},
   descriptionLogger: function (description, cb) {
     if (this.config.console) {
       console.log('\n\n"It ' + description + '"');
@@ -102,7 +102,8 @@ const APP = {
       this.testRoot.appendChild(pre)
     }
   },
-  init: function () {
+  init: function (config) {
+    this.config = config;
     addScript(`tests/${getHash()}.js`);
     this.generateTabs();
     this.tabRoot.addEventListener('click', this.manageActiveTests.bind(this));
@@ -170,4 +171,4 @@ const expect = (target) => {
 const meta = (description) => {
   APP.insertMeta(description)
 }
-APP.init()
+APP.init(config)

@@ -53,4 +53,9 @@
   it('n should be [2,3]', () => {
     expect(n).toBe([2,3])
   })
+  let x = [1,2,3]
+  let htmlString = '';
+  it('makes html', () => {
+    expect(htmlString).toBe('<p>1</p><p>2</p><p>3</p>')
+  })
 }())

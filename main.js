@@ -25,6 +25,44 @@ function getHash() {
   return window.location.hash.slice(1) || APP.config.tabs[0]
 }
 
+function compareArrayOrObj(value, other) {
+  // Get the value type
+  var type = Object.prototype.toString.call(value);
+
+  // If the two objects are not the same type, return false
+  if (type !== Object.prototype.toString.call(other)) return false;
+
+  // If items are not an object or array, return false
+  if (['[object Array]', '[object Object]'].indexOf(type) < 0) return false;
+
+  // Compare the length of the length of the two items
+  var valueLen = type === '[object Array]' ? value.length : Object.keys(value).length;
+  var otherLen = type === '[object Array]' ? other.length : Object.keys(other).length;
+  if (valueLen !== otherLen) return false;
+
+  // Compare two items
+  var compare = function (item1, item2) {
+    // Code will go here...
+  };
+
+  // Compare properties
+  var match;
+  if (type === '[object Array]') {
+    for (var i = 0; i < valueLen; i++) {
+      compare(value[i], other[i]);
+    }
+  } else {
+    for (var key in value) {
+      if (value.hasOwnProperty(key)) {
+        compare(value[key], other[key]);
+      }
+    }
+  }
+
+  // If nothing failed, return true
+  return true;
+}
+
 const APP = {
   testRoot: document.querySelector('#tests'),
   tabRoot: document.querySelector('#tabs'),
@@ -43,8 +81,14 @@ const APP = {
     cb();
   },
   expectLogger: function (target, expectation) {
+    let passed = target === expectation;
+    // handle arrays and objects differently
+    if (Array.isArray(target) || typeof target === 'obj') {
+      passed = compareArrayOrObj(target, expectation)
+    }
+
     if (this.config.console) {
-      if (target === expectation) {
+      if (passed) {
         console.log('\n     %cPASSED', 'color:green;', 'Expected', target, 'to be', expectation);
         return true;
       } else {
@@ -53,7 +97,6 @@ const APP = {
       }
     } else {
       const pre = document.createElement('pre')
-      const passed = target === expectation;
       pre.classList = passed ? 'test success' : 'test failure'
       pre.innerHTML = `${passed ? 'PASSED' : 'FAILED'}: Expected ${target} to be ${expectation}`
       this.testRoot.appendChild(pre)
@@ -87,6 +130,12 @@ const APP = {
       return `<li class="tab ${activeLink === item ? 'active' : ''}"><a class="link" href="#${item}">${item}</a></li>`
     }).join('')
     this.tabRoot.innerHTML = `<ul>${tabStr}</ul>`
+  },
+  insertMeta: function (description) {
+    const n = document.createElement('pre');
+    n.classList = 'meta'
+    n.innerHTML = `&#9432; ${description}`;
+    this.testRoot.prepend(n);
   }
 };
 
@@ -111,7 +160,14 @@ const expect = (target) => {
   return {
     toBe(expectation) {
       return APP.expectLogger(target, expectation)
+    },
+    toEqualArray(expectation) {
+
     }
   }
+}
+
+const meta = (description) => {
+  APP.insertMeta(description)
 }
 APP.init()

@@ -6,6 +6,7 @@
 
 body {
   margin: 1rem;
+  font-family: Helvetica, san-seriff;
 }
 
 a {
@@ -30,6 +31,12 @@ pre.success {
 
 pre.failure {
   color: red;
+}
+
+pre.meta {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #f7f7f7;
 }
 
 #tabs ul {

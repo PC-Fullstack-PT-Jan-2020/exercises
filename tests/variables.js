@@ -1,4 +1,14 @@
 (function () {
+  meta('By modifying variables, solve the exercises below')
+  let a = 1
+  let b;
+  let c = false
+  it('should change variables to these values', () => {
+    expect(a).toBe(undefined)
+    expect(b).toBe(null)
+    expect(c).toBe(true)
+  })
+
   let num = 1
   it('should increment num', () => {
     expect(num).toBe(2)

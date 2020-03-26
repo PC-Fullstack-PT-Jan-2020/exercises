@@ -1,65 +1,17 @@
-// a simple "it" function for naming groups of expectations
-function it(description, contents) {
-  descriptionLogger(false, description, contents)
-}
-
-// A simple function for expecting values
-// Ex: expect(sadie.color).toBe('black'); // should return true
-function expect(target) {
-  return {
-    toBe: function (expectation) {
-      return expectLogger(false, target, expectation)
-    }
-  }
-}
-
-const testRoot = document.querySelector('#tests');
-
-const APP = {
-  testRoot: document.querySelector('#tests'),
-  tabRoot: document.querySelector('#tabs'),
-};
+// DOM utils
 
 /*
-  have test logger,
-  if cns (console) use js console
-  otherwise plop test in html
+  adds a script to the dom
+  param script name
 */
-function descriptionLogger(cns = true, description, cb) {
-  if (cns) {
-    console.log('\n\n"It ' + description + '"');
-  } else {
-    const pre = document.createElement('pre')
-    pre.innerHTML = description;
-    APP.testRoot.appendChild(pre)
-  }
-  cb();
-}
-
-function expectLogger(cns = true, target, expectation) {
-  if (cns) {
-    if (target === expectation) {
-      console.log('\n     %cPASSED', 'color:green;', 'Expected', target, 'to be', expectation);
-      return true;
-    } else {
-      console.log('\n     %cFAILED', 'color:red;', 'Expected', target, 'to be', expectation);
-      return false;
-    }
-  } else {
-    const pre = document.createElement('pre')
-    const passed = target === expectation;
-    pre.classList = passed ? 'test success' : 'test failure'
-    pre.innerHTML = `${passed ? 'PASSED': 'FAILED'}: Expected ${target} to be ${expectation}`
-    APP.testRoot.appendChild(pre)
-  }
-}
-
 function addScript(src) {
   var s = document.createElement('script');
   s.setAttribute('src', src);
   document.body.appendChild(s);
 }
-
+/*
+  remove scripts from the dom
+*/
 function removeScripts(filename) {
   var tags = document.getElementsByTagName('script');
   for (var i = tags.length; i >= 0; i--) { //search backwards within nodelist for matching elements to remove
@@ -68,33 +20,98 @@ function removeScripts(filename) {
     }
   }
 }
-
+// grab the location hash or the first tab from config
 function getHash() {
-  return window.location.hash.slice(1) || config.tabs[0]
+  return window.location.hash.slice(1) || APP.config.tabs[0]
 }
 
-function generateTabs() {
-  const activeLink = getHash()
-  const tabStr = config.tabs.map(item => {
-    return `<li class="tab ${activeLink === item ? 'active' : ''}"><a class="link" href="#${item}">${item}</a></li>`
-  }).join('')
-  APP.tabRoot.innerHTML = `<ul>${tabStr}</ul>`
-}
-
-generateTabs()
-
-APP.tabRoot.addEventListener('click', function (e) {
-  APP.testRoot.innerHTML = '';
-  const tabClicked = e.target.matches('.link') || e.target.childNodes[0].matches('link')
-  const aTag = e.target.matches('.link') ? e.target : e.target.childNodes[0];
-  if (tabClicked) {
-    const href = aTag.getAttribute('href').slice(1)
-    removeScripts()
-    addScript(`tests/${href}.js`)
-    setTimeout(() => {
-      generateTabs()
-    }, 0)
+const APP = {
+  testRoot: document.querySelector('#tests'),
+  tabRoot: document.querySelector('#tabs'),
+  clearTests: function () {
+    this.testRoot.innerHTML = '';
+  },
+  config: config,
+  descriptionLogger: function (description, cb) {
+    if (this.config.console) {
+      console.log('\n\n"It ' + description + '"');
+    } else {
+      const pre = document.createElement('pre')
+      pre.innerHTML = description;
+      this.testRoot.appendChild(pre);
+    }
+    cb();
+  },
+  expectLogger: function (target, expectation) {
+    if (this.config.console) {
+      if (target === expectation) {
+        console.log('\n     %cPASSED', 'color:green;', 'Expected', target, 'to be', expectation);
+        return true;
+      } else {
+        console.log('\n     %cFAILED', 'color:red;', 'Expected', target, 'to be', expectation);
+        return false;
+      }
+    } else {
+      const pre = document.createElement('pre')
+      const passed = target === expectation;
+      pre.classList = passed ? 'test success' : 'test failure'
+      pre.innerHTML = `${passed ? 'PASSED' : 'FAILED'}: Expected ${target} to be ${expectation}`
+      this.testRoot.appendChild(pre)
+    }
+  },
+  init: function () {
+    addScript(`tests/${getHash()}.js`);
+    this.generateTabs();
+    this.tabRoot.addEventListener('click', this.manageActiveTests.bind(this));
+  },
+  manageActiveTests: function (e) {
+    // prevent default since we are going to push href programatically
+    e.preventDefault();
+    this.clearTests();
+    const tabClicked = e.target.matches('.link') || e.target.childNodes[0].matches('.link');
+    const aTag = e.target.matches('.link') ? e.target : e.target.childNodes[0];
+    if (tabClicked) {
+      const href = aTag.getAttribute('href');
+      const sanitized = href.slice(1);
+      window.location = href;
+      removeScripts();
+      addScript(`tests/${sanitized}.js`);
+      setTimeout(() => {
+        this.generateTabs();
+      }, 0);
+    }
+  },
+  generateTabs: function() {
+    const activeLink = getHash()
+    const tabStr = this.config.tabs.map(item => {
+      return `<li class="tab ${activeLink === item ? 'active' : ''}"><a class="link" href="#${item}">${item}</a></li>`
+    }).join('')
+    this.tabRoot.innerHTML = `<ul>${tabStr}</ul>`
   }
-})
+};
 
-addScript(`tests/${getHash()}.js`)
+// global utils for testing
+
+/*
+  takes a string and a callback
+  params:
+    description: string
+    contents: functon
+*/
+const it = (description, contents) => {
+  APP.descriptionLogger(description, contents);
+}
+/*
+  takes a target value and returns a toBe util that checks an expectation
+  params:
+    target: any value
+    expectation: any value
+*/
+const expect = (target) => {
+  return {
+    toBe(expectation) {
+      return APP.expectLogger(target, expectation)
+    }
+  }
+}
+APP.init()

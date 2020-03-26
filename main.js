@@ -22,7 +22,7 @@ function descriptionLogger(cns = true, description, cb) {
   if (cns) {
     console.log('\n\n"It ' + description + '"');
   } else {
-    let pre = document.createElement('pre')
+    const pre = document.createElement('pre')
     pre.innerHTML = description;
     document.body.appendChild(pre)
   }
@@ -39,9 +39,36 @@ function expectLogger(cns = true, target, expectation) {
       return false;
     }
   } else {
-    let pre = document.createElement('pre')
+    const pre = document.createElement('pre')
     pre.classList = target === expectation ? 'test success' : 'test failure'
     pre.innerHTML = `Expected ${target} to be ${expectation}`
     document.body.appendChild(pre)
   }
 }
+
+function addScript(src) {
+  var s = document.createElement('script');
+  s.setAttribute('src', src);
+  document.body.appendChild(s);
+}
+
+function getHash() {
+  return window.location.hash.slice(1) || config.tabs[0]
+}
+
+function generateTabs() {
+  const activeLink = getHash()
+  const tabStr = config.tabs.map(item => {
+    return `<li class="tab ${activeLink === item ? 'active' : ''}"><a href="#${item}">${item}</a></li>`
+  }).join('')
+  document.querySelector('#tabs').innerHTML = `<ul>${tabStr}</ul>`
+}
+
+generateTabs()
+
+document.querySelector('#tabs a').addEventListener('click', function () {
+  const href = this.getAttribute('href').slice(1)
+  addScript(`tests/${href}.js`)
+})
+
+addScript(`tests/${getHash()}.js`)

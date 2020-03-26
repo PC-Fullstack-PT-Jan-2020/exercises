@@ -1,0 +1,47 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 1rem;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+pre {
+  background: #ddd;
+  border-radius: 3px;
+  padding: .5rem;
+}
+
+pre.test {
+  background: #fff;
+  margin-left: 1rem;
+}
+
+pre.success {
+  color: green;
+}
+
+pre.failure {
+  color: red;
+}
+
+#tabs {
+  display: flex;
+}
+
+#tabs .tab {
+  list-style: none;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+#tabs .tab.active {
+  border-bottom: 2px solid #ddd;
+}

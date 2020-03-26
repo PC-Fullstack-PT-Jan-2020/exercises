@@ -1,6 +1,5 @@
 (function () {
   let num = 1
-  num++
   it('should increment num', () => {
     expect(num).toBe(2)
   });
@@ -34,4 +33,16 @@
     expect(o2.title).toBe('My value')
   })
 
+  let str = ``
+  let name = 'John'
+  it('should make str equal Hello, john', () => {
+    expect(str).toBe('Hello, John')
+  })
+
+  let str2 = 'John'
+  let last = 'Smith'
+  let name2 = ''
+  it('should make name2 equal John Smith', () => {
+    expect(name2).toBe('John Smith')
+  })
 }())

@@ -71,16 +71,17 @@ const APP = {
   },
   config: {},
   descriptionLogger: function (description, cb) {
+    let pre;
     if (this.config.console) {
       console.log('\n\n"It ' + description + '"');
     } else {
-      const pre = document.createElement('pre')
+      pre = document.createElement('pre')
       pre.innerHTML = description;
       this.testRoot.appendChild(pre);
     }
-    cb();
+    cb(pre);
   },
-  expectLogger: function (target, expectation) {
+  expectLogger: function (target, expectation, domTarget = null) {
     let passed = target === expectation;
     // handle arrays and objects differently
     if (Array.isArray(target) || typeof target === 'obj') {
@@ -99,7 +100,11 @@ const APP = {
       const pre = document.createElement('pre')
       pre.classList = passed ? 'test success' : 'test failure'
       pre.innerHTML = `${passed ? 'PASSED' : 'FAILED'}: Expected ${target} to be ${expectation}`
-      this.testRoot.appendChild(pre)
+      if (domTarget) {
+        domTarget.appendChild(pre)
+      } else {
+        this.testRoot.appendChild(pre)
+      }
     }
   },
   init: function (config) {
@@ -157,10 +162,10 @@ const it = (description, contents) => {
     target: any value
     expectation: any value
 */
-const expect = (target) => {
+const expect = (target, domTarget = null) => {
   return {
     toBe(expectation) {
-      return APP.expectLogger(target, expectation)
+      return APP.expectLogger(target, expectation, domTarget)
     },
     toEqualArray(expectation) {
 

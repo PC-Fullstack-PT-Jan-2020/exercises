@@ -65,3 +65,8 @@ button {
   background: #ddd;
   outline: none;
 }
+
+button.active {
+  background: green;
+  color: #fff;
+}

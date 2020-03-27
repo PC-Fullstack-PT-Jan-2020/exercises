@@ -1,5 +1,4 @@
 (function () {
-  meta('using vanilla js dom manipulation')
 
   function expectDom($pre) {
     return function (value) {
@@ -15,8 +14,11 @@
       <button id="button3">button 3</button>
       <button id="button4">button 4</button>
       <button id="button5">button 5</button>
+      <button id="button6">button 6</button>
     </div>
   `
+  meta('using vanilla js dom manipulation')
+
   it('button1 should have the innerHTML of 2 after clicking', ($pre) => {
     // DONT touch
     const expect = expectDom($pre);
@@ -26,7 +28,7 @@
     })
   })
 
-  it('button1a should have the innerHTML of 2 after clicking', ($pre) => {
+  it('button1a should have the innerHTML of 2 after clicking button1a', ($pre) => {
     // DONT touch
     const expect = expectDom($pre);
     $('#button1a').on('click', function () {
@@ -67,7 +69,7 @@
     return p
   }
 
-  it('count should be 1 more after clicking button', ($pre) => {
+  it('count should be 1 more after clicking button4', ($pre) => {
     // DONT touch
     const expect = expectDom($pre);
     const count = 22
@@ -83,11 +85,21 @@
     })
   })
 
-  it('button5 should have a class of active after clicking', () => {
+  it('button5 should have a class of active after clicking', ($pre) => {
+    // DONT touch
+    const expect = expectDom($pre);
     $('#button5').on('click', function () {
-      //
-      
+      // ??
       expect($(this).hasClass('active')).toBe(true)
+    })
+  })
+
+  it('button5 should not have a class of active after clicking button6', ($pre) => {
+    // DONT touch
+    const expect = expectDom($pre);
+    $('#button6').on('click', function () {
+      // ??
+      expect($('#button5').hasClass('active')).toBe(false)
     })
   })
 }())

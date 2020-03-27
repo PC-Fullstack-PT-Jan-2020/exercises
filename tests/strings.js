@@ -50,4 +50,22 @@
   it('notIncludes should be true', () => {
     expect(notIncludes).toBe(true)
   })
+
+  let strToChange = 'hello'
+  let strArr
+  it(`should make strArr equal [h, e, l, l, o]`, () => {
+    expect(strArr).toBe(['h', 'e', 'l', 'l', 'o'])
+  })
+
+  let strToUppercase = 'look at me'
+  let strUppercased
+  it(`should make strUppercased equal LOOK AT ME`, () => {
+    expect(strUppercased).toBe('LOOK AT ME')
+  })
+
+  let strToLower = 'HELLO'
+  let strLowered
+  it(`should make strLowered equal hello`, () => {
+    expect(strLowered).toBe('hello')
+  })
 }())

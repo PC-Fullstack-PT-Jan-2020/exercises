@@ -105,6 +105,33 @@
     expect(checkIfObjectHasProp({ title: '' }, 'baz')).toBe(false)
   })
 
+  function isVowel() {
+
+  }
+
+
+  it('isVowel takes a letter and returns true or false', () => {
+    expect(isVowel('a')).toBe(true)
+  })
+
+  function isVowelInWord() {
+
+  }
+
+  it('isVowelInWord checks if string has a vowel in it', () => {
+    expect(isVowelInWord('banana')).toBe(true)
+    expect(isVowelInWord('fhfhfhfh')).toBe(false)
+  })
+
+  function countLetters() {
+
+  }
+
+  it('countLetters gives back an object of letters counted', () => {
+    expect(countLetters('apple').a).toBe(1)
+    expect(countLetters('bb').b).toBe(2)
+  })
+
   function giveMeOne() {
     return 1
   }

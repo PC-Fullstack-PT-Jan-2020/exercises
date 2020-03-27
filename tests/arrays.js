@@ -21,6 +21,15 @@
   it('baz should be [1]', () => {
     expect(baz).toBe([1])
   })
+  
+  let bazIncludes2
+  let bazIncludes3
+  let bazDoesNotInclude4
+  it('check if baz contains or doesnt contain something', () => {
+    expect(bazIncludes2).toBe(true)
+    expect(bazIncludes3).toBe(false)
+    expect(bazDoesNotInclude4).toBe(true)
+  })
 
   let nums = [1,2,3]
   let multiplied
@@ -47,8 +56,8 @@
     expect(sum2).toBe(6)
   })
 
-  // not using filter or loops - remove the first item from foo
-  // hint its an array method we didnt talk about
+  // not using filter or loops - remove the first item from n
+  // hint its an array method we did not talk about
   let n = [1,2,3]
   it('n should be [2,3]', () => {
     expect(n).toBe([2,3])
